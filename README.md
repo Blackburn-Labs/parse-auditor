@@ -73,7 +73,7 @@ This would output the patient's name over time top the console, so you could see
 ## Configuation
 
 The third argument to `parse-auditor` is a config object. The structure of this object, and its defaults are:
-```json
+```javascript
 {
     classPrefix: '',
     classPostfix: '_AUD',
