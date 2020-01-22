@@ -1,5 +1,5 @@
 # Parse Auditor
-This is a small module inspired by [Hibernate's Envers](https://hibernate.org/orm/envers/) project. It adds automated data versioning/tracking/auditing to table.
+This is a small module inspired by [Hibernate's Envers](https://hibernate.org/orm/envers/) project. It adds automated data versioning/tracking/auditing to classes.
 
 This can be very helpful for apps that need to adhere to regulations like healthcare apps which need to adhere to HIPAA
 standards. This can also be used for apps that have a high level of data sensitivity like legal or FinTech apps.
