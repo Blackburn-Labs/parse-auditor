@@ -1,0 +1,24 @@
+# IntelliJ project files
+.idea
+*.iml
+
+# Eclipse
+.classpath
+.project
+.settings
+
+# Project Specific
+/img/*-target.*
+scratchpad.txt
+SCRATCHPAD.md
+*.log
+/test/results
+
+# Node
+/node_modules
+
+# Lint
+.eslintcache
+
+# OS
+.DS_Store
