@@ -1,0 +1,90 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "airbnb"
+  ],
+  "env": {
+    "browser": true,
+    "node": true,
+    "jest": true,
+    "es6": true
+  },
+  "rules": {
+    "class-methods-use-this": [
+      0
+    ],
+    "max-len": [
+      "error",
+      {
+        "code": 120,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true,
+        "ignoreUrls": true,
+        "ignoreTrailingComments": true,
+        "ignoreRegExpLiterals": true
+      }
+    ],
+    "indent": [
+      "error",
+        4,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "react/jsx-indent": [
+      "error",
+      4
+    ],
+    "react/jsx-indent-props": [
+      "error",
+      4
+    ],
+    "react/forbid-prop-types": [
+      2,
+      {"forbid": ["any", "array"]}
+    ],
+    "no-unused-vars": [
+      "error", {
+        "varsIgnorePattern": "[iI]gnored||connect"
+      }
+    ],
+    "no-console": [
+      "error"
+    ],
+    "no-restricted-syntax": [
+      0
+    ],
+    "no-undef": [
+      0
+    ],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "**/*.stories.js",
+          "**/*.test.js",
+          "test/**/*.js",
+          "karma.conf.js"
+        ]
+      }
+    ],
+    "import/no-unresolved": [ // Needed to allow webpack `externals` settings
+      0
+    ],
+    "import/extensions": [ // Needed to allow webpack `externals` settings
+      0
+    ],
+    "react/prefer-stateless-function": [
+      0
+    ],
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
+      }
+    ]
+  }
+}

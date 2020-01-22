@@ -1,0 +1,43 @@
+{
+  "name": "parse-auditor",
+  "version": "0.0.1",
+  "description": "Audit module for Parse Platform",
+  "homepage": "https://www.blackburnlabs.com/parse-auditor",
+  "author": "Robert Blackburn <rob@blackburnlabs.com> (https://www.blackburnlabs.com)",
+  "contributors": [
+    "Robert Blackburn <rob@blackburnlabs.com> (https://www.blackburnlabs.com)"
+  ],
+  "keywords": [
+    "audit",
+    "history",
+    "parse",
+    "cloud"
+  ],
+  "engines": {
+    "node": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Blackburn-Labs/parse-auditor"
+  },
+  "bugs": {
+    "url": "https://github.com/Blackburn-Labs/parse-auditor/issues"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "cross-env eslint . --ext .js --ignore-path .gitignore --cache",
+    "bundle": "cross-env webpack --progress --config webpack.config.js"
+  },
+  "license": "BSD-3-Clause",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "babel-loader": "^8.0.6",
+    "core-js": "^3.6.4",
+    "cross-env": "^6.0.3",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
+  }
+}
