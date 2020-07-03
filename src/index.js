@@ -57,7 +57,7 @@ const init = (auditModifiedClasses, auditAccessClasses = [], options = {}) => {
     const config = {
         classPrefix, classPostfix, fieldPrefix, fieldPostfix, parseSDK, useMasterKey, clp
     };
-    
+
     auditModifiedClasses.forEach((c) => {
         if (Object.keys(config.clp).length !== 0){
             parseSDK.Cloud.define(`audit${config.classPrefix}${c}${config.classPostfix}SetCLP`, async req =>  setCLP(c, config));
