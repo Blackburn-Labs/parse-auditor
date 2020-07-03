@@ -22,7 +22,7 @@ const setCLP = async (subjectClass, config = CONFIG_DEFAULTS) => {
     await a.get()
     .catch(() => {
         a.setCLP(config.clp)
-        .save({useMasterKey: config.useMasterKey})
+        .save()
         .then(() => {
             console.log(`parse-auditor successfully created class '${fixedClassName}'. Ignore any previous errors about this class`);
         });
