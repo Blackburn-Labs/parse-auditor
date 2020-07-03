@@ -20,19 +20,12 @@ const setCLP = async (subjectClass, config = CONFIG_DEFAULTS) => {
     const a = new Parse.Schema(fixedClassName);
 
     await a.get()
-    .catch(error => {
-        a.setCLP(config.clp);
-        if (!config.useMasterKey){
-            a.save()
-            .then(() => {
-                console.log(`parse-auditor successfully created class '${fixedClassName}'. Ignore any previous errors about this class`);
-            });
-        }else{
-            a.save({useMasterKey: true})
-            .then(() => {
-                console.log(`parse-auditor successfully created class '${fixedClassName}'. Ignore any previous errors about this class`);
-            });
-        }
+    .catch(() => {
+        a.setCLP(config.clp)
+        .save({useMasterKey: config.useMasterKey})
+        .then(() => {
+            console.log(`parse-auditor successfully created class '${fixedClassName}'. Ignore any previous errors about this class`);
+        });
     })
 };
 
@@ -50,12 +43,7 @@ const audit = async (user, action, subjectClass, subject, config = CONFIG_DEFAUL
     a.set(`${config.fieldPrefix}action${config.fieldPostfix}`, action);
     a.set(`${config.fieldPrefix}class${config.fieldPostfix}`, subjectClass);
     a.set(`${config.fieldPrefix}subject${config.fieldPostfix}`, subject);
-    
-    if (!config.useMasterKey){
-        a.save({useMasterKey: true});
-    }else{
-        a.save({useMasterKey: true});
-    }
+    a.save({useMasterKey: config.useMasterKey});
 };
 
 const init = (auditModifiedClasses, auditAccessClasses = [], options = {}) => {
