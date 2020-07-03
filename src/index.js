@@ -16,7 +16,7 @@ const setCLP = async (subjectClass, config = CONFIG_DEFAULTS) => {
         a.setCLP(config.clp);
     }
 
-    if (!config.useMasterKey){
+    if (config.useMasterKey === false){
         console.log('****');
         a.save();
     }else{
@@ -40,7 +40,7 @@ const audit = async (user, action, subjectClass, subject, config = CONFIG_DEFAUL
     a.set(`${config.fieldPrefix}class${config.fieldPostfix}`, subjectClass);
     a.set(`${config.fieldPrefix}subject${config.fieldPostfix}`, subject);
     
-    if (!config.useMasterKey){
+    if (config.useMasterKey === false){
         console.log('****');
         a.save();
     }else{
