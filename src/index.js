@@ -43,7 +43,7 @@ const audit = async (user, action, subjectClass, subject, config = CONFIG_DEFAUL
     a.set(`${config.fieldPrefix}action${config.fieldPostfix}`, action);
     a.set(`${config.fieldPrefix}class${config.fieldPostfix}`, subjectClass);
     a.set(`${config.fieldPrefix}subject${config.fieldPostfix}`, subject);
-    a.save({useMasterKey: config.useMasterKey});
+    a.save(null,{useMasterKey: config.useMasterKey});
 };
 
 const init = (auditModifiedClasses, auditAccessClasses = [], options = {}) => {
@@ -60,8 +60,9 @@ const init = (auditModifiedClasses, auditAccessClasses = [], options = {}) => {
 
     auditModifiedClasses.forEach((c) => {
         if (Object.keys(config.clp).length !== 0){
-            parseSDK.Cloud.define(`audit${config.classPrefix}${c}${config.classPostfix}SetCLP`, async req =>  setCLP(c, config));
-            parseSDK.Cloud.run(`audit${config.classPrefix}${c}${config.classPostfix}SetCLP`);
+            const fixedClassName = fixClassNameIfNeeded(c,config);
+            parseSDK.Cloud.define(`audit${fixedClassName}SetCLP`, async req =>  setCLP(c, config));
+            parseSDK.Cloud.run(`audit${fixedClassName}SetCLP`);
         }
         parseSDK.Cloud.afterSave(c, async req => audit(req.user, 'SAVE', c, req.object, config));
         parseSDK.Cloud.afterDelete(c, async req => audit(req.user, 'DELETE', c, req.object, config));
