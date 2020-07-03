@@ -24,7 +24,7 @@ Let say you have a healthcare app that needs HIPAA logging around its Patient an
 your app's cloud code (i.e. `cloud/main.js`):
 
 ```javascript
-const ParseAuditor = require('./parse-auditor.js');
+const ParseAuditor = require('parse-auditor');
 ParseAuditor(['Patient', 'Clinic'])
 ```
 
@@ -34,7 +34,7 @@ respectively.
 
 You can also tell `parse-auditor` which classes to track reads on:
 ```javascript
-const ParseAuditor = require('./parse-auditor.js');
+const ParseAuditor = require('parse-auditor');
 ParseAuditor(['Patient', 'Clinic'], ['Patient'])
 ```
 
@@ -85,7 +85,7 @@ The third argument to `parse-auditor` is a config object. The structure of this 
 
 For example:
 ```javascript
-const ParseAuditor = require('./parse-auditor.js');
+const ParseAuditor = require('parse-auditor');
 ParseAuditor(['Patient', 'Clinic'], ['Patient'], { classPostfix: '_HISTORY' })
 ```
 
