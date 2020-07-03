@@ -8,25 +8,36 @@ const CONFIG_DEFAULTS = {
     clp: {}
 };
 
+const fixClassNameIfNeeded = (subjectClass, config = CONFIG_DEFAULTS) =>{
+    if ((config.classPrefix === '') && (subjectClass.charAt(0) === '_')){
+        subjectClass = subjectClass.substring(1, subjectClass.length);;
+    }
+    return `${config.classPrefix}${subjectClass}${config.classPostfix}`;
+}
+
 const setCLP = async (subjectClass, config = CONFIG_DEFAULTS) => {
-    const Audit = Parse.Object.extend(`${config.classPrefix}${subjectClass}${config.classPostfix}`);
-    const a = new Audit();
+    const fixedClassName = fixClassNameIfNeeded(subjectClass,config);
+    const a = new Parse.Schema(fixedClassName);
 
-    if (Object.keys(config.clp).length !== 0){
+    await a.get()
+    .catch(error => {
         a.setCLP(config.clp);
-    }
-
-    if (config.useMasterKey === false){
-        console.log('****');
-        a.save({useMasterKey: true});
-    }else{
-        console.log('111111');
-        a.save({useMasterKey: true});
-    }
+        if (!config.useMasterKey){
+            a.save()
+            .then(() => {
+                console.log(`parse-auditor successfully created class '${fixedClassName}'. Ignore any previous errors about this class`);
+            });
+        }else{
+            a.save({useMasterKey: true})
+            .then(() => {
+                console.log(`parse-auditor successfully created class '${fixedClassName}'. Ignore any previous errors about this class`);
+            });
+        }
+    })
 };
 
 const audit = async (user, action, subjectClass, subject, config = CONFIG_DEFAULTS) => {
-    const Audit = Parse.Object.extend(`${config.classPrefix}${subjectClass}${config.classPostfix}`);
+    const Audit = Parse.Object.extend(fixClassNameIfNeeded(subjectClass,config));
     const a = new Audit();
 
     for (const property in subject.attributes) {
@@ -40,7 +51,7 @@ const audit = async (user, action, subjectClass, subject, config = CONFIG_DEFAUL
     a.set(`${config.fieldPrefix}class${config.fieldPostfix}`, subjectClass);
     a.set(`${config.fieldPrefix}subject${config.fieldPostfix}`, subject);
     
-    if (config.useMasterKey === false){
+    if (!config.useMasterKey){
         a.save({useMasterKey: true});
     }else{
         a.save({useMasterKey: true});
@@ -58,10 +69,12 @@ const init = (auditModifiedClasses, auditAccessClasses = [], options = {}) => {
     const config = {
         classPrefix, classPostfix, fieldPrefix, fieldPostfix, parseSDK, useMasterKey, clp
     };
-
+    
     auditModifiedClasses.forEach((c) => {
-        parseSDK.Cloud.define(`audit${config.classPrefix}${subjectClass}${config.classPostfix}SetCLP`, async req =>  setCLP(c, config));
-        parseSDK.Cloud.run(`audit${config.classPrefix}${subjectClass}${config.classPostfix}SetCLP`);
+        if (Object.keys(config.clp).length !== 0){
+            parseSDK.Cloud.define(`audit${config.classPrefix}${c}${config.classPostfix}SetCLP`, async req =>  setCLP(c, config));
+            parseSDK.Cloud.run(`audit${config.classPrefix}${c}${config.classPostfix}SetCLP`);
+        }
         parseSDK.Cloud.afterSave(c, async req => audit(req.user, 'SAVE', c, req.object, config));
         parseSDK.Cloud.afterDelete(c, async req => audit(req.user, 'DELETE', c, req.object, config));
     });
