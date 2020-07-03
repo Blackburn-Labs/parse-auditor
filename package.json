@@ -1,6 +1,6 @@
 {
   "name": "parse-auditor",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "Audit module for Parse Platform",
   "homepage": "https://www.blackburnlabs.com/parse-auditor",
   "author": "Robert Blackburn <rob@blackburnlabs.com> (https://www.blackburnlabs.com)",
