@@ -60,9 +60,7 @@ const init = (auditModifiedClasses, auditAccessClasses = [], options = {}) => {
 
     auditModifiedClasses.forEach((c) => {
         if (Object.keys(config.clp).length !== 0){
-            const fixedClassName = fixClassNameIfNeeded(c,config);
-            parseSDK.Cloud.define(`audit${fixedClassName}SetCLP`, async req =>  setCLP(c, config));
-            parseSDK.Cloud.run(`audit${fixedClassName}SetCLP`);
+            setCLP(c, config);
         }
         parseSDK.Cloud.afterSave(c, async req => audit(req.user, 'SAVE', c, req.object, config));
         parseSDK.Cloud.afterDelete(c, async req => audit(req.user, 'DELETE', c, req.object, config));
