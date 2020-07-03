@@ -15,10 +15,12 @@ const setCLP = async (subjectClass, config = CONFIG_DEFAULTS) => {
     if (Object.keys(config.clp).length !== 0){
         a.setCLP(config.clp);
     }
-    
+
     if (!config.useMasterKey){
+        console.log('****');
         a.save();
     }else{
+        console.log('111111');
         a.save({useMasterKey: true});
     }
 };
