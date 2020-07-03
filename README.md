@@ -80,13 +80,16 @@ The third argument to `parse-auditor` is a config object. The structure of this 
     fieldPrefix: 'meta_',
     fieldPostfix: '',
     parseSDK: Parse,
+    useMasterKey: false,
+    clp: {}
 }
 ```
 
 For example:
 ```javascript
 const ParseAuditor = require('parse-auditor');
-ParseAuditor(['Patient', 'Clinic'], ['Patient'], { classPostfix: '_HISTORY' })
+const customConfig = { classPostfix: '_HISTORY', useMasterKey: true, clp: {create: { '*': true }, addField: { '*': true } } };
+ParseAuditor(['Patient', 'Clinic'], ['Patient'], customConfig);
 ```
 
 This will track all edits to these classes (creates, updates, deletes) as well as any views to a `Patient`. This will
