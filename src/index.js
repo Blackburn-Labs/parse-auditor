@@ -4,10 +4,33 @@ const CONFIG_DEFAULTS = {
     fieldPrefix: 'meta_',
     fieldPostfix: '',
     parseSDK: Parse,
+    useMasterKey: false,
+    clp: {}
+};
+
+const fixClassNameIfNeeded = (subjectClass, config = CONFIG_DEFAULTS) =>{
+    if ((config.classPrefix === '') && (subjectClass.charAt(0) === '_')){
+        subjectClass = subjectClass.substring(1, subjectClass.length);;
+    }
+    return `${config.classPrefix}${subjectClass}${config.classPostfix}`;
+}
+
+const setCLP = async (subjectClass, config = CONFIG_DEFAULTS) => {
+    const fixedClassName = fixClassNameIfNeeded(subjectClass,config);
+    const a = new Parse.Schema(fixedClassName);
+
+    await a.get()
+    .catch(() => {
+        a.setCLP(config.clp)
+        .save()
+        .then(() => {
+            console.log(`parse-auditor successfully created class '${fixedClassName}'. Ignore any previous errors about this class`);
+        });
+    })
 };
 
 const audit = async (user, action, subjectClass, subject, config = CONFIG_DEFAULTS) => {
-    const Audit = Parse.Object.extend(`${config.classPrefix}${subjectClass}${config.classPostfix}`);
+    const Audit = Parse.Object.extend(fixClassNameIfNeeded(subjectClass,config));
     const a = new Audit();
 
     for (const property in subject.attributes) {
@@ -20,8 +43,7 @@ const audit = async (user, action, subjectClass, subject, config = CONFIG_DEFAUL
     a.set(`${config.fieldPrefix}action${config.fieldPostfix}`, action);
     a.set(`${config.fieldPrefix}class${config.fieldPostfix}`, subjectClass);
     a.set(`${config.fieldPrefix}subject${config.fieldPostfix}`, subject);
-
-    a.save();
+    a.save(null,{useMasterKey: config.useMasterKey});
 };
 
 const init = (auditModifiedClasses, auditAccessClasses = [], options = {}) => {
@@ -30,11 +52,16 @@ const init = (auditModifiedClasses, auditAccessClasses = [], options = {}) => {
     const fieldPrefix = options.fieldPrefix || CONFIG_DEFAULTS.fieldPrefix;
     const fieldPostfix = options.fieldPostfix || CONFIG_DEFAULTS.fieldPostfix;
     const parseSDK = options.parseSDK || CONFIG_DEFAULTS.parseSDK;
+    const useMasterKey = options.useMasterKey || CONFIG_DEFAULTS.useMasterKey;
+    const clp = options.clp || CONFIG_DEFAULTS.clp;
     const config = {
-        classPrefix, classPostfix, fieldPrefix, fieldPostfix, parseSDK,
+        classPrefix, classPostfix, fieldPrefix, fieldPostfix, parseSDK, useMasterKey, clp
     };
 
     auditModifiedClasses.forEach((c) => {
+        if (Object.keys(config.clp).length !== 0){
+            setCLP(c, config);
+        }
         parseSDK.Cloud.afterSave(c, async req => audit(req.user, 'SAVE', c, req.object, config));
         parseSDK.Cloud.afterDelete(c, async req => audit(req.user, 'DELETE', c, req.object, config));
     });

@@ -24,7 +24,7 @@ Let say you have a healthcare app that needs HIPAA logging around its Patient an
 your app's cloud code (i.e. `cloud/main.js`):
 
 ```javascript
-const ParseAuditor = require('./parse-auditor.js');
+const ParseAuditor = require('parse-auditor');
 ParseAuditor(['Patient', 'Clinic'])
 ```
 
@@ -34,7 +34,7 @@ respectively.
 
 You can also tell `parse-auditor` which classes to track reads on:
 ```javascript
-const ParseAuditor = require('./parse-auditor.js');
+const ParseAuditor = require('parse-auditor');
 ParseAuditor(['Patient', 'Clinic'], ['Patient'])
 ```
 
@@ -80,13 +80,16 @@ The third argument to `parse-auditor` is a config object. The structure of this 
     fieldPrefix: 'meta_',
     fieldPostfix: '',
     parseSDK: Parse,
+    useMasterKey: false,
+    clp: {}
 }
 ```
 
 For example:
 ```javascript
-const ParseAuditor = require('./parse-auditor.js');
-ParseAuditor(['Patient', 'Clinic'], ['Patient'], { classPostfix: '_HISTORY' })
+const ParseAuditor = require('parse-auditor');
+const customConfig = { classPostfix: '_HISTORY', useMasterKey: true, clp: {create: { '*': true }, addField: { '*': true } } };
+ParseAuditor(['Patient', 'Clinic'], ['Patient'], customConfig);
 ```
 
 This will track all edits to these classes (creates, updates, deletes) as well as any views to a `Patient`. This will
